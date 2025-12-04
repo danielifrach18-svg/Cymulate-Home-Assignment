@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  phishing-simulation:
+    build:
+      context: ./phishing-simulation-server
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      MONGO_URI: "mongodb://root:example@mongo:27017/phishing?authSource=admin"
+    depends_on:
+      - mongo
+
+  phishing-management:
+    build:
+      context: ./phishing-management-server
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3002:3002"
+    environment:
+      MONGO_URI: "mongodb://root:example@mongo:27017/phishing?authSource=admin"
+      PHISHING_SERVER_URL: "http://phishing-simulation:3001"
+    depends_on:
+      - mongo
+      - phishing-simulation
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - phishing-management
