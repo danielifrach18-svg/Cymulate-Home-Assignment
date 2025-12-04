@@ -7,8 +7,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PhishingAttempt, PhishingDocument } from '../schemas/phishing.schema';
 import * as nodemailer from 'nodemailer';
+import 'dotenv/config';
 
-const PORT = process.env.PORT;
+const { PORT, EMAIL_USER, EMAIL_PASS } = process.env;
 
 @Injectable()
 export class PhishingService {
@@ -20,8 +21,8 @@ export class PhishingService {
   private transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'daniel.ifrach18@gmail.com',
-      pass: 'sidz iarx fsfm uihh',
+      user: EMAIL_USER,
+      pass: EMAIL_PASS,
     },
   });
 
@@ -38,7 +39,7 @@ export class PhishingService {
       });
 
       await this.transporter.sendMail({
-        from: '"Phishing Simulator" <your-email@example.com>',
+        from: `Phishing Simulator" <${EMAIL_USER}>`,
         to: email,
         subject,
         text: body,

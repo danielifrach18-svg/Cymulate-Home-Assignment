@@ -1,11 +1,11 @@
 import axios from "axios";
 import { PhishingAttempt } from "../types";
 
-const API_URL = "http://localhost:3000/manage-phishing";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const sendPhishingEmail = (email: string, token: string) => {
   return axios.post(
-    `${API_URL}/send?email=${email}`,
+    `${API_URL}/manage-phishing/send?email=${email}`,
     {},
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -14,7 +14,7 @@ export const sendPhishingEmail = (email: string, token: string) => {
 };
 
 export const getAllAttempts = (token: string) => {
-  return axios.get<PhishingAttempt[]>(`${API_URL}/all`, {
+  return axios.get<PhishingAttempt[]>(`${API_URL}/manage-phishing/all`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 };

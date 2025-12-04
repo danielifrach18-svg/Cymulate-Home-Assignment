@@ -1,6 +1,9 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import 'dotenv/config';
+
+const API_PHISHING_SIMULATION = process.env.API_PHISHING_SIMULATION;
 
 @Injectable()
 export class PhishingService {
@@ -9,7 +12,7 @@ export class PhishingService {
   async getAllAttempts() {
     try {
       const response = await firstValueFrom(
-        this.http.get('http://localhost:8000/phishing/all'),
+        this.http.get(`${API_PHISHING_SIMULATION}/phishing/all`),
       );
       return response.data;
     } catch (error) {
@@ -23,7 +26,9 @@ export class PhishingService {
   async sendPhishingAttempt(email: string) {
     try {
       const response = await firstValueFrom(
-        this.http.post(`http://localhost:8000/phishing/send?email=${email}`),
+        this.http.post(
+          `${API_PHISHING_SIMULATION}/phishing/send?email=${email}`,
+        ),
       );
       return response.data;
     } catch (error) {

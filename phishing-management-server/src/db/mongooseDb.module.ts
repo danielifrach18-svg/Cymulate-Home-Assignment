@@ -5,7 +5,7 @@ import { yellow } from 'chalk';
 const { MONGODB_URI } = process.env;
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost:27017/phishing-db')],
+  imports: [MongooseModule.forRoot(MONGODB_URI)],
 })
 export class MongooseDBModule {
   constructor() {
